@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/vpmapelli/video-maker-bots/issues"
   },
-  "homepage": "https://github.com/vpmapelli/video-maker-bots#readme"
+  "homepage": "https://github.com/vpmapelli/video-maker-bots#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.9"
+  }
 }
