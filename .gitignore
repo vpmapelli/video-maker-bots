@@ -66,3 +66,4 @@ content.json
 content/*.png
 content/*.jpg
 video_files/*.mp4
+*.deb
