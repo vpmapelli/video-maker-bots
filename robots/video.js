@@ -11,6 +11,7 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
 async function robot() {
+  console.log('> [video-robot] Starting...')
   const content = state.load()
 
   await convertAllImages(content)
@@ -132,7 +133,7 @@ async function robot() {
             return reject(error)
           }
 
-          console.log('> Creating Youtube thumbnail')
+          console.log('> [video-robot] Youtube thumbnail created')
           resolve()
         })
      })
@@ -252,7 +253,8 @@ async function robot() {
           .audio("./video_files/newsroom.mp3")
           .save("./video_files/video.mp4")
           .on("start", function(command) {
-            console.log("ffmpeg process started:", command);
+            //console.log("ffmpeg process started:", command);
+            console.log('> [video-robot] Starting to render video...')
           })
 
           .on("error", function(err, stdout, stderr) {
@@ -261,7 +263,7 @@ async function robot() {
             reject(err);
           })
           .on("end", function(output) {
-            console.error("Video created in:", output);
+            console.error("> [video-robot] Video created in:", output);
             resolve();
           });
     })

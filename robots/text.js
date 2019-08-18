@@ -15,6 +15,7 @@ const state = require('./state.js')
 
 
 async function robot() {
+console.log('> [text-robot] Starting...')
  const content = state.load()
 
  await fetchContentFromWikipedia(content)
@@ -26,12 +27,14 @@ async function robot() {
  state.save(content)
 
  async function fetchContentFromWikipedia(content) {
+  console.log('> [text-robot] Fetching content from Wikipedia')
   const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey)
   const wikipediaAlgorithm = algorithmiaAuthenticated.algo('web/WikipediaParser/0.1.2')
   const wikipediaResponde = await wikipediaAlgorithm.pipe(content.searchTerm)
   const wikipediaContent = wikipediaResponde.get()
  
   content.sourceContentOriginal = wikipediaContent.content
+  console.log('> [text-robot] Fetching done!')
  }
 
  function sanitizeContent(content){
@@ -77,33 +80,36 @@ async function robot() {
  }
 
  async function fetchKeywordsOfAllSentences(content){
+  console.log('> [text-robot] Starting to fetch keywords from Watson')
+
   for (const sentence of content.sentences) {
     sentence.keywords = await fetchWatsonAndReturnKeywords(sentence.text)
+    console.log(`> [text-robot] Keywords: ${sentence.keywords.join(', ')}`)
   }
  }
 
 
-    async function fetchWatsonAndReturnKeywords(sentence) {
-        return new Promise((resolve, reject) => {
-              nlu.analyze({
-                      'text': sentence,
-                      'features': {
-                                'keywords': {}
-                              }
-                    }, (error, response) => {
-                            if (error) {
-                                      reject(error)
-                                      return
-                                    }
-                    
-                            const keywords = response.keywords.map((keyword) => {
-                                      return keyword.text
-                                    })
-                    
-                            resolve(keywords)
-                          })
-            })
-    }
+  async function fetchWatsonAndReturnKeywords(sentence) {
+    return new Promise((resolve, reject) => {
+      nlu.analyze({
+        'text': sentence,
+        'features': {
+          'keywords': {}
+         }
+      }, (error, response) => {
+          if (error) {
+            reject(error)
+            return
+          }
+          
+          const keywords = response.keywords.map((keyword) => {
+            return keyword.text
+          })
+          
+          resolve(keywords)
+        })
+    })
+  }
 
 }
 
